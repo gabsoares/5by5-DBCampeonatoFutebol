@@ -7,7 +7,7 @@
 - Sql Server
 
 ## <p style="padding-top: 30px; border-bottom: 1px solid #eaeaea; width: 500px">Exercício Proposto</p>
-![Exercicio](campeonato-futebol.png)
+![Exercicio](campeonatofutebol.png)
 
 ## <p style="padding-top: 30px; border-bottom: 1px solid #eaeaea; width: 500px">Modelo Entidade-Relacionamento</p>
 ![Modelo Entidade-Relacionamento](MODELOER.png)
