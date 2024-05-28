@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Reflection.PortableExecutable;
 using Microsoft.Data.SqlClient;
 
 namespace _5by5_CampeonatoFutebol
@@ -62,10 +63,11 @@ namespace _5by5_CampeonatoFutebol
                                     while (reader.Read())
                                     {
                                         Console.WriteLine(reader.GetString(0));
-                                        i = reader.GetInt32(1);
+                                        Console.Clear();
                                     }
                                     PressioneEnter();
                                 }
+
                             }
                             catch (Exception ex)
                             {
@@ -76,6 +78,10 @@ namespace _5by5_CampeonatoFutebol
                             finally
                             {
                                 conn.Close();
+                            }
+                            if (ObterQuantidadeTime() >= 5)
+                            {
+                                i = 10;
                             }
                         }
                     }
@@ -95,9 +101,7 @@ namespace _5by5_CampeonatoFutebol
             int idCasa = 0;
             int idVisita = 0;
 
-            bool limitePartidaAtingido = (ObterQuantidadeTime() * ObterQuantidadeTime()) - ObterQuantidadeTime() == ObterQuantidadePartida();
-
-            if (!limitePartidaAtingido)
+            if (ObterQuantidadePartida() == 0)
             {
                 for (int i = 1; i <= ObterQuantidadeTime(); i++)
                 {
@@ -137,7 +141,7 @@ namespace _5by5_CampeonatoFutebol
             }
             else
             {
-                Console.WriteLine("Limite de partidas atingido!!!");
+                Console.WriteLine("As partidas já foram criadas, caso queira fazer com um novo número de times, resete o campeonato e times!!!");
                 PressioneEnter();
                 return;
             }
@@ -145,23 +149,39 @@ namespace _5by5_CampeonatoFutebol
 
         void ExcluirDados()
         {
-            try
+            if (!QuantidadeTimeZerada() || ObterQuantidadePartida() != 0)
             {
-                conn.Open();
+                try
+                {
+                    conn.Open();
 
-                cmd = new("EXCLUIR_DADOS", conn);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.ExecuteNonQuery();
+                    cmd = new("EXCLUIR_DADOS", conn);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine(reader.GetString(0));
+                        }
+                        PressioneEnter();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Erro: " + ex.Source.ToString());
+                    PressioneEnter();
+                    return;
+                }
+                finally
+                {
+                    conn.Close();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Erro: " + ex.Source.ToString());
+                Console.WriteLine("Nao tem o que excluir!!!");
                 PressioneEnter();
                 return;
-            }
-            finally
-            {
-                conn.Close();
             }
         }
 
